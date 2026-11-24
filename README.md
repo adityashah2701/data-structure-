@@ -1,25 +1,52 @@
-# Music Management System – C Data Structures Project
+# Music Management System – Review 1
 
-A modular, diploma-level Data Structures project implemented in standard **C11**. The system models a music player and manager across three academic evaluation reviews, progressively introducing fundamental data structures.
+A diploma-level Data Structures project implemented in standard **C11**.
 
-## Academic Review Roadmap
+This branch (`review-1`) implements **Review 1: Queue Operations**, focusing on FIFO song queueing and fixed-capacity circular history buffering.
 
-| Review | Branch | Data Structures Implemented | Focus Functionalities |
+---
+
+## Review 1 Overview & Implemented Functionalities
+
+| Functionality | Data Structure | Implementation Type | Description |
 |---|---|---|---|
-| **Base** | `main` | Common definitions & Project scaffold | Data models, safe I/O utilities |
-| **Review 1** | `review-1` | Linear Queue, Circular Queue | Song queueing (FIFO), Recently played history (wraparound overwrite) |
-| **Review 2** | `review-2` | Doubly Linked List, Binary Search Tree | Playlist management (bidirectional traversal), Genre categorization |
-| **Review 3** | `review-3` | Hash Table (with linear probing & tombstones) | Fast ID lookup, Complete end-to-end integration |
+| **Song Queueing** | Linear Queue | Static Array (`MAX = 10`) | FIFO play queue. Supports enqueue, dequeue, peek, display, overflow, and underflow detection. |
+| **Recently Played** | Circular Queue | Static Array (`MAX = 5`) | Ring buffer storing the last 5 played tracks in chronological order. Automatically handles wraparound and overwrites the oldest track. |
 
-## Data Structures Overview
+---
 
-1. **Linear Queue (`linear_queue`)**: FIFO play queue managing upcoming songs. Handles overflow and underflow conditions.
-2. **Circular Queue (`circular_queue`)**: Ring buffer storing the latest 5 recently played tracks, automatically overwriting the oldest song on wraparound.
-3. **Doubly Linked List (`playlist`)**: User playlist allowing forward/backward navigation and song deletion by unique ID.
-4. **Binary Search Tree (`genre_bst`)**: Hierarchical genre directory providing sorted (inorder), preorder, and postorder traversals and search.
-5. **Hash Table (`hash_table`)**: Closed addressing / open hashing with linear probing and tombstone markers for $O(1)$ song lookup, insertion, and deletion.
+## Data Structures & Operations
 
-## Modular Folder Structure
+### 1. Linear Queue (`linear-queue/`)
+- **Structure**: Static array of `Song` elements with `front` and `rear` index pointers.
+- **Operations**:
+  - `lq_init()`: Initializes `front = -1` and `rear = -1`.
+  - `lq_enqueue()`: Adds song to `rear`. Checks for queue overflow (`rear == MAX - 1`).
+  - `lq_dequeue()`: Removes song from `front`. Checks for underflow (`front == -1 || front > rear`). Resets to `-1` when emptied.
+  - `lq_display()`: Prints all waiting songs from `front` to `rear`.
+  - `lq_peek()`: Inspects the next upcoming track without removing it.
+
+### 2. Circular Queue (`circular-queue/`)
+- **Structure**: Ring buffer array of fixed size `5` with `front`, `rear`, and `count`.
+- **Operations**:
+  - `cq_init()`: Initializes `front = -1`, `rear = -1`, `count = 0`.
+  - `cq_insert()`: Adds newly played track. If count reaches 5, overwrites the item at `front` and advances `front = (front + 1) % 5`, preserving the latest 5 songs.
+  - `cq_display()`: Iterates `(front + i) % 5` for `i` from `0` to `count - 1` to display tracks in strictly chronological order (oldest to newest).
+
+---
+
+## Time Complexities
+
+| Operation | Linear Queue | Circular Queue |
+|---|---|---|
+| **Enqueue / Insert** | $O(1)$ | $O(1)$ |
+| **Dequeue** | $O(1)$ | $O(1)$ |
+| **Peek** | $O(1)$ | $O(1)$ |
+| **Display All** | $O(N)$ | $O(N)$ |
+
+---
+
+## Folder Structure on `review-1`
 
 ```text
 Music-Management-System/
@@ -40,25 +67,24 @@ Music-Management-System/
         │   ├── linear_queue.h
         │   └── linear_queue.c
         │
-        ├── circular-queue/
-        │   ├── circular_queue.h
-        │   └── circular_queue.c
-        │
-        ├── doubly-linked-list/
-        │   ├── playlist.h
-        │   └── playlist.c
-        │
-        ├── binary-search-tree/
-        │   ├── genre_bst.h
-        │   └── genre_bst.c
-        │
-        └── hash-table/
-            ├── hash_table.h
-            └── hash_table.c
+        └── circular-queue/
+            ├── circular_queue.h
+            └── circular_queue.c
 ```
 
-## Compilation and Execution
+---
 
-- `make` - Compiles the project with standard flags (`gcc -std=c11 -Wall -Wextra -Wpedantic`).
-- `make run` - Executes the compiled binary `./music_system`.
-- `make clean` - Cleans object files and binaries.
+## Compilation & Execution
+
+Compile using `gcc -std=c11 -Wall -Wextra -Wpedantic`:
+
+```bash
+# Compile
+make
+
+# Run
+make run
+
+# Clean build artifacts
+make clean
+```

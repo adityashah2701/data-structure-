@@ -2,6 +2,7 @@
 *.o
 music_system
 *.out
+*.dSYM
 
 # macOS files
 .DS_Store
