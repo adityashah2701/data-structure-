@@ -1,5 +1,6 @@
 #include "linear_queue.h"
 #include <stdio.h>
+#include <string.h>
 
 /* Initialize the linear queue */
 void lq_init(LinearQueue *q) {
@@ -41,8 +42,13 @@ int lq_enqueue(LinearQueue *q, Song song) {
     }
     q->rear++;
     q->items[q->rear] = song;
-    printf("[ENQUEUE SUCCESS] Added to Play Queue at position %d: '%s' by %s\n",
-           q->rear - q->front + 1, song.title, song.artist);
+    if (strcmp(song.artist, "-") != 0 && song.artist[0] != '\0') {
+        printf("[ENQUEUE SUCCESS] Added to Play Queue at position %d: '%s' by %s\n",
+               q->rear - q->front + 1, song.title, song.artist);
+    } else {
+        printf("[ENQUEUE SUCCESS] Added to Play Queue at position %d: '%s' (ID: %d)\n",
+               q->rear - q->front + 1, song.title, song.id);
+    }
     return 1;
 }
 
@@ -55,8 +61,7 @@ int lq_dequeue(LinearQueue *q, Song *out_song) {
     if (out_song != NULL) {
         *out_song = q->items[q->front];
     }
-    printf("[DEQUEUE SUCCESS] Dequeued '%s' by %s from position 1.\n",
-           q->items[q->front].title, q->items[q->front].artist);
+    printf("[DEQUEUE SUCCESS] Dequeued '%s' from position 1.\n", q->items[q->front].title);
 
     q->front++;
     /* Reset pointers when queue becomes empty to reuse space */

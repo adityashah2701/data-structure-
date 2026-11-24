@@ -62,14 +62,9 @@ int main(void) {
                 }
                 int id = read_int("Enter Song ID: ");
                 char title[MAX_TITLE_LEN];
-                char artist[MAX_ARTIST_LEN];
-                char genre[MAX_GENRE_LEN];
                 read_string("Enter Song Title: ", title, sizeof(title));
-                read_string("Enter Artist Name: ", artist, sizeof(artist));
-                read_string("Enter Genre: ", genre, sizeof(genre));
-                int duration = read_int("Enter Duration (in seconds): ");
 
-                Song s = create_song(id, title, artist, genre, duration);
+                Song s = create_song(id, title, "-", "-", 0);
                 lq_enqueue(&play_queue, s);
                 break;
             }
@@ -100,14 +95,9 @@ int main(void) {
             case 5: {
                 int id = read_int("Enter Song ID: ");
                 char title[MAX_TITLE_LEN];
-                char artist[MAX_ARTIST_LEN];
-                char genre[MAX_GENRE_LEN];
                 read_string("Enter Song Title: ", title, sizeof(title));
-                read_string("Enter Artist Name: ", artist, sizeof(artist));
-                read_string("Enter Genre: ", genre, sizeof(genre));
-                int duration = read_int("Enter Duration (in seconds): ");
 
-                Song s = create_song(id, title, artist, genre, duration);
+                Song s = create_song(id, title, "-", "-", 0);
                 cq_insert(&recent_queue, s);
                 break;
             }

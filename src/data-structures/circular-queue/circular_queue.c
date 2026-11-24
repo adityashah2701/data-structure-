@@ -1,5 +1,6 @@
 #include "circular_queue.h"
 #include <stdio.h>
+#include <string.h>
 
 /* Initialize the circular queue */
 void cq_init(CircularQueue *q) {
@@ -43,15 +44,15 @@ void cq_insert(CircularQueue *q, Song song) {
         q->rear = 0;
         q->items[q->rear] = song;
         q->count = 1;
-        printf("[RECENTLY PLAYED] Added '%s' by %s (Slot 0, 1/%d stored).\n",
-               song.title, song.artist, MAX_RECENT);
+        printf("[RECENTLY PLAYED] Added '%s' (Slot 0, 1/%d stored).\n",
+               song.title, MAX_RECENT);
     } else if (q->count < MAX_RECENT) {
         /* Space available: normal advance with wraparound */
         q->rear = (q->rear + 1) % MAX_RECENT;
         q->items[q->rear] = song;
         q->count++;
-        printf("[RECENTLY PLAYED] Added '%s' by %s (Slot %d, %d/%d stored).\n",
-               song.title, song.artist, q->rear, q->count, MAX_RECENT);
+        printf("[RECENTLY PLAYED] Added '%s' (Slot %d, %d/%d stored).\n",
+               song.title, q->rear, q->count, MAX_RECENT);
     } else {
         /* Full capacity: overwrite oldest song */
         Song overwritten = q->items[q->front];
@@ -61,8 +62,8 @@ void cq_insert(CircularQueue *q, Song song) {
         q->rear = (q->rear + 1) % MAX_RECENT;
         q->items[q->rear] = song;
         q->front = (q->front + 1) % MAX_RECENT; /* Move front to the next oldest */
-        printf("[RECENTLY PLAYED] Stored new track '%s' by %s at Slot %d.\n",
-               song.title, song.artist, q->rear);
+        printf("[RECENTLY PLAYED] Stored new track '%s' at Slot %d.\n",
+               song.title, q->rear);
     }
 }
 
