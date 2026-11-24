@@ -2,55 +2,51 @@
 #define INPUT_H
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
-/* Clear any lingering characters in the input stream */
-static inline void clear_input_buffer(void) {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF) {
-        /* discard */
+/*
+ * Clear leftover characters (like the Enter key '\n') from the keyboard buffer.
+ * In C, scanf leaves '\n' in the input stream; this loop cleans it up.
+ */
+static inline void clear_buffer(void) {
+    int ch;
+    while ((ch = getchar()) != '\n' && ch != EOF) {
+        /* Discard characters until newline or end of file */
     }
 }
 
-/* Read a single line string safely using fgets, stripping trailing newline */
-static inline void read_string(const char *prompt, char *buffer, int max_len) {
-    if (prompt != NULL && prompt[0] != '\0') {
-        printf("%s", prompt);
+/*
+ * Read an integer from the user.
+ * 1. Prints the prompt (e.g., "Enter Song ID: ").
+ * 2. Reads the number using standard scanf.
+ * 3. Clears the trailing Enter key so future inputs work cleanly.
+ */
+static inline int read_int(const char *prompt) {
+    int value = 0;
+    printf("%s", prompt);
+    if (scanf("%d", &value) != 1) {
+        clear_buffer();
+        return 0;
     }
-    if (fgets(buffer, max_len, stdin) != NULL) {
-        size_t len = strlen(buffer);
-        if (len > 0 && buffer[len - 1] == '\n') {
-            buffer[len - 1] = '\0';
+    clear_buffer();
+    return value;
+}
+
+/*
+ * Read a string (including spaces, e.g. "Bohemian Rhapsody").
+ * 1. Prints the prompt (e.g., "Enter Song Title: ").
+ * 2. Uses fgets to safely read up to 'size' characters without buffer overflow.
+ * 3. Replaces the trailing '\n' with '\0' (null terminator).
+ */
+static inline void read_string(const char *prompt, char *str, int size) {
+    printf("%s", prompt);
+    if (fgets(str, size, stdin) != NULL) {
+        int len = (int)strlen(str);
+        if (len > 0 && str[len - 1] == '\n') {
+            str[len - 1] = '\0';
         }
     } else {
-        buffer[0] = '\0';
-    }
-}
-
-/* Read an integer safely from standard input, re-prompting on invalid format */
-static inline int read_int(const char *prompt) {
-    int val;
-    char buffer[64];
-    while (1) {
-        if (prompt != NULL && prompt[0] != '\0') {
-            printf("%s", prompt);
-        }
-        if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
-            return 0;
-        }
-        char *endptr;
-        val = (int)strtol(buffer, &endptr, 10);
-        if (endptr != buffer) {
-            /* Skip trailing whitespace */
-            while (*endptr == ' ' || *endptr == '\t' || *endptr == '\r' || *endptr == '\n') {
-                endptr++;
-            }
-            if (*endptr == '\0') {
-                return val;
-            }
-        }
-        printf("Invalid input. Please enter a valid integer: ");
+        str[0] = '\0';
     }
 }
 
