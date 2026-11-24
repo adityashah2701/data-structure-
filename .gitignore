@@ -1,0 +1,10 @@
+# Object files and binaries
+*.o
+music_system
+*.out
+
+# macOS files
+.DS_Store
+
+# Temporary files
+*.tmp
